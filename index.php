@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Advanced Software Engineering</title>
+<title>External Advanced Software Engineering</title>
 <link href="../assets/css/bootstrap.css" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 <link rel="stylesheet" href="../assets/css/owl.carousel.css">
@@ -24,7 +24,7 @@
                     </button>
 
                     <!-- lOGO TEXT HERE -->
-                    <a href="#" class="navbar-brand">AES Inventory Database</a>
+                    <a href="#" class="navbar-brand">AES Inventory Database External</a>
                </div>
                <!-- MENU LINKS -->
                <div class="collapse navbar-collapse">
@@ -57,13 +57,13 @@
                                 echo '<div class="alert alert-success" role="alert">Manufacturer added successfully!</div>';
                             }
                             if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'SerialModified') {
-                                echo '<div class="alert alert-success" role="alert">Serial Number modified</div>';
+                                echo '<div class="alert alert-success" role="alert">Equipment Activity modified!</div>';
                             }
                             if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'ManufacturerModified') {
-                                echo '<div class="alert alert-success" role="alert">Manufacturer modified</div>';
+                                echo '<div class="alert alert-success" role="alert">Manufacturer Activity modified!</div>';
                             }
                             if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'DeviceModified') {
-                                echo '<div class="alert alert-success" role="alert">Device modified</div>';
+                                echo '<div class="alert alert-success" role="alert">Device Activity modified!</div>';
                             }
                         ?>
                                            

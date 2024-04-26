@@ -11,6 +11,7 @@
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="../assets/css/templatemo-style.css">
+    <script src="../assets/js/jquery-3.5.1.js"></script>
 </head>
 
 <body>
@@ -49,108 +50,68 @@
         <section id="feature">
             <div class="container">
                 <div class="row">
-                    <?php 
-                        require_once("functions.php");
-                        $dblink = db_connect("devices");
-                        $devices = array();
-                        $devicesActivity = array();
-                        $manufacturers = array();
-                        $manufacturersActivity = array();
-                        $sql = "select `name`, `id`, `status` from `device_type`";
-                        $result = $dblink->query($sql) or die($dblink->error);
-                        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                            $devices[$row['id']] = $row['name'];
-                            $devicesActivity[$row['id']] = $row['status'];
-                        }
-                        $sql = "select `name`, `id`, `status` from `manufacturer`";
-                        $result = $dblink->query($sql) or die($dblink->error);
-                        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                            $manufacturers[$row['id']] = $row['name'];
-                            $manufacturersActivity[$row['id']] = $row['status'];
-                        }
-                        if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'SerialDoesntExist') {
-                            echo "<div class='alert alert-danger' role='alert'>Serial Number does not exist in database!</div>";
-                        }
-                        if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'DeviceDoesntExist') {
-                            echo "<div class='alert alert-danger' role='alert'>Device Type does not exist in database!</div>";
-                        }
-                        if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'ManufacturerDoesntExist') {
-                            echo "<div class='alert alert-danger' role='alert'>Manufacturer does not exist in database!</div>";
-                        }
+                    <?php
+                    if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'SerialDoesntExist') {
+                        echo "<div class='alert alert-danger' role='alert'>Serial Number does not exist in database!</div>";
+                    }
+                    if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'DeviceDoesntExist') {
+                        echo "<div class='alert alert-danger' role='alert'>Device Type does not exist in database!</div>";
+                    }
+                    if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == 'ManufacturerDoesntExist') {
+                        echo "<div class='alert alert-danger' role='alert'>Manufacturer does not exist in database!</div>";
+                    }
                     ?>
 
                     <!-- Add Manufacturer Form -->
-                    <h3>Modify Serial Number</h3>
+                    <h3>Modify Equipment Activity</h3>
                     <form method="post" action="">
                         <div class="form-group" id="serial-in-div">
-                            <label for="oldSerial">Serial Number to Modify:</label>
-                            <span class="help-block" id="old-serial-status"></span>
-                            <input type="text" class="form-control" id="oldSerialInput" name="oldSerial">
-
-                            <label for="newSerial">Update Serial Number to:(cannot be blank)</label>
+                            <label for="newSerial">Serial Number:</label>
                             <span class="help-block" id="new-serial-status"></span>
-                            <input type="text" class="form-control" id="newSerialInput" name="newSerial">
+                            <input  type="text" class="form-control" style="width: 650px;" id="newSerialInput" name="newSerial">
+                            <label for="newSerial">Device Type:</label>
+                            <input type="text" disabled class="form-control" style="width: auto;" id="eq_deviceType" name="deviceType">
+                            <label for="newSerial">Manufacturer:</label>
+                            <input type="text" disabled class="form-control" style="width: auto;" id="eq_manufacturer" name="manufacturer">
+                            <label for="newSerial">Status:</label>
+                            <input type="radio" name="eq_status" value="active"> Active
+                            <input type="radio" name="eq_status" value="inactive"> Inactive
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" name="submitNewSerial" value="submitNewSerial"
-                                id="serial-btn" disabled>Modify</button>
+                            <button type="submit" class="btn btn-primary" name="submitNewSerial" value="submitNewSerial" id="serial-btn" disabled>Modify</button>
                         </div>
                     </form>
                     <hr>
                     <!-- Add Manufacturer Form -->
-                    <h3>Modify Manufacturer</h3>
+                    <!--TODO: FINISH -->
+                    <h3>Modify Manufacturer Activity</h3>
                     <form method="post" action="">
                         <div class="form-group" id="manu-in-div">
-                            <label for="oldManufacturer">Manufacturer to Modify:</label>
+                            <label for="oldManufacturer">Select Manufacturer to Modify:</label>
                             <span class="help-block" id="old-manufacturer-status"></span>
                             <select class="form-control" id="oldManufacturerInput" name="oldManufacturer">
-                                <?php
-                                        foreach($manufacturers as $key => $value){
-                                            if ($manufacturersActivity[$key] == 'inactive') {
-                                                echo "<option value='$key'>$value (Inactive)</option>";
-                                            } else {
-                                                echo "<option value='$key'>$value</option>";
-                                            }
-                                        }
-                                    ?>
                             </select>
-                                <input type="radio" name="manustatus" value="active" checked> Active
-                                <input type="radio" name="manustatus" value="inactive"> Inactive<br>
-                            <label for="newManufacturer">Update Manufacturer to:(cannot be blank)</label>
-                            <span class="help-block" id="new-manufacturer-status"></span>
-                            <input type="text" class="form-control" id="newManufacturerInput" name="newManufacturer">
+                            <input type="radio" name="manustatus" value="active" checked> Active
+                            <input type="radio" name="manustatus" value="inactive"> Inactive<br>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" name="submitNewManu" value="submitNewManu"
-                                id="manu-btn" disabled>Modify</button>
+                            <button type="submit" class="btn btn-primary" name="submitNewManu" value="submitNewManu" id="manu-btn" >Modify</button>
                         </div>
                     </form>
                     <hr>
                     <!-- Add Device Type Form -->
+                    <!--TODO: FINISH -->
                     <h3>Modify Device Type</h3>
                     <form method="post" action="">
                         <div class="form-group" id="dev-in-div">
-                            <label for="oldDevice">Device to Modify:</label>
+                            <label for="oldDevice">Select Device to Modify:</label>
                             <select class="form-control" id="oldDevice" name="oldDevice">
-                                <?php
-                                        foreach($devices as $key => $value){
-                                            if ($devicesActivity[$key] == 'inactive') {
-                                                echo "<option value='$key'>$value (Inactive)</option>";
-                                            } else {
-                                                echo "<option value='$key'>$value</option>";
-                                            }
-                                        }
-                                    ?>
                             </select>
-                                <input type="radio" name="devstatus" value="active" checked> Active
-                                <input type="radio" name="devstatus" value="inactive"> Inactive<br>
-                            <label for="newDevice">Update Device to:(cannot be blank)</label>
-                            <span class="help-block" id="new-device-status"></span>
-                            <input type="text" class="form-control" id="newDeviceInput" name="newDevice">
+                            <input type="radio" name="devstatus" value="active" checked> Active
+                            <input type="radio" name="devstatus" value="inactive"> Inactive<br>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" name="submitNewDevice"
-                                value="submitNewDevice" id="dev-btn" disabled>Modify</button>
+                            <button type="submit" class="btn btn-primary" name="submitNewDevice" value="submitNewDevice" id="dev-btn" >Modify</button>
                         </div>
                     </form>
 
@@ -159,115 +120,173 @@
                 </div>
             </div>
         </section>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var device_types = {};
+                var manufacturers = {};
+                $.ajax({
+                    url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/device",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        result.MSG.forEach(function(item) {
+                            $('#oldDevice').append($('<option>', {
+                                value: item.id,
+                                text: item.name + ' (' + item.status + ')'
+                            }));
+                            device_types[item.id] = item.name;
+                        });
+                    },
+                    error: function(error) {
+                        console.log('message Error' + JSON.stringify(error));
+                    }
+                });
+                // populate manufacturer dropdown
+                $.ajax({
+                    url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/manufacturer",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        result.MSG.forEach(function(item) {
+                            $('#oldManufacturerInput').append($('<option>', {
+                                value: item.id,
+                                text: item.name + ' (' + item.status + ')'
+                            }));
+                            manufacturers[item.id] = item.name;
+                        });
+                    },
+                    error: function(error) {
+                        console.log('message Error' + JSON.stringify(error));
+                    }
+                });
+                // HANDLE SERIAL NUMBER INPUT
+                var newSerialInput = document.getElementById('newSerialInput');
+                var serialValue = newSerialInput.value;
+                var serialInDiv = document.getElementById('serial-in-div');
+                var newStatusSpan = document.getElementById('new-serial-status');
+                var serialBtn = document.getElementById('serial-btn');
+                var eq_deviceType = document.getElementById('eq_deviceType');
+                var eq_manufacturer = document.getElementById('eq_manufacturer');
+                var eq_radios = document.getElementsByName('eq_status');
+
+                var equip_id = ''
+
+                newSerialInput.addEventListener('input', function() {
+                    serialValue = newSerialInput.value;
+                    if (serialValue.length > 0) {
+                        serialBtn.disabled = false;
+                    } else {
+                        serialBtn.disabled = true;
+                    }
+                    if (serialValue.startsWith('SN-')) {
+                        newStatusSpan.textContent = "";
+                        serialInDiv.classList.remove('has-error');
+                        serialBtn.disabled = false;
+                    } else {
+                        newStatusSpan.textContent = "Serial Number must start with 'SN-'";
+                        serialInDiv.classList.add('has-error');
+                        serialBtn.disabled = true;
+                    }
+                });
+
+                newSerialInput.addEventListener('focusout', function() {
+                    if (serialValue.length == 0) {
+                    alert(serialValue)
+                        newStatusSpan.textContent = "Serial Number cannot be empty!";
+                        serialInDiv.classList.add('has-error');
+                        return;
+                    }
+                    $.ajax({
+                        url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/equipment/sn?sn=" + serialValue,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(result) {
+                            equip_id = result.MSG.auto_id;
+                            eq_deviceType.value = device_types[result.MSG.device_type_id];
+                            eq_deviceType.id = result.MSG.device_type_id;
+                            eq_manufacturer.value = manufacturers[result.MSG.manufacturer_id];
+                            eq_manufacturer.id = result.MSG.manufacturer_id;
+                            // i need to put it to the selected value
+                            $('#eq_deviceType').find('option[value="' + result.MSG.device_type_id + '"]').prop('selected', true);
+                            $('#eq_manufacturer').find('option[value="' + result.MSG.manufacturer_id + '"]').prop('selected', true);
+                            eq_radios.forEach(function(radio) {
+                                if (radio.value == result.MSG.status) {
+                                    radio.checked = true;
+                                }
+                            });
+                        },
+                        error: function(error) {
+                            console.log('message Error' + JSON.stringify(error));
+                            newStatusSpan.textContent = "Serial Number does not exist in database!";
+                            serialInDiv.classList.add('has-error');
+                            newSerialInput.value = "";
+                            eq_deviceType.value = "";
+                            eq_manufacturer.value = "";
+                        }
+                    });
+                });
+
+                function redirect(url) {
+                    window.location.href = url;
+                }
+
+                serialBtn.addEventListener('click', function(e) {
+                    console.log('modify equipment')
+                    e.preventDefault();
+                    var id = equip_id;
+                    $.ajax({
+                        url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/equipment/" + id + "/status?status=" + document.querySelector('input[name="eq_status"]:checked').value,
+                        type: "PATCH",
+                        success: function(result) {
+                            redirect('index.php?msg=SerialModified');
+                        },
+                        error: function(error) {
+                            console.log('message Error ' + JSON.stringify(error));
+                        }
+                    })
+                })
+
+
+                // HANDLE MANUFACTURER INPUT
+                var manuBtn = document.getElementById('manu-btn');
+
+                manuBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    var id = document.getElementById('oldManufacturerInput').value;
+                    var status = document.querySelector('input[name="manustatus"]:checked').value;
+                    $.ajax({
+                        url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/manufacturer/" + id + "/status?status=" + status,
+                        type: "PATCH",
+                        success: function(result) {
+                            redirect('index.php?msg=ManufacturerModified');
+                        },
+                        error: function(error) {
+                            console.log('message Error ' + JSON.stringify(error));
+                        }
+                    })
+                });
+
+                // HANDLE DEVICE INPUT
+                var devBtn = document.getElementById('dev-btn');
+
+                devBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    var id = document.getElementById('oldDevice').value;
+                    var status = document.querySelector('input[name="devstatus"]:checked').value;
+                    $.ajax({
+                        url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/device/" + id + "/status?status=" + status,
+                        type: "PATCH",
+                        success: function(result) {
+                            redirect('index.php?msg=DeviceModified');
+                        },
+                        error: function(error) {
+                            console.log('message Error ' + JSON.stringify(error));
+                        }
+                    })
+                });
+
+            }); // end DOMContentLoaded
+        </script>
     </body>
 
 </html>
-<?php
-if (isset($_POST['submitNewSerial'])) {
-    $oldSerial = $_POST['oldSerial'];
-    $newSerial = $_POST['newSerial'];
-    $sql = "select `auto_id` from `serial_numbers` where `serial_number` = '$oldSerial'";
-    $res = $dblink->query($sql) or 
-        die("<p>Something went wrong with $sql<br>".$dblink->error."</p>");
-    if ($res->num_rows == 0) {
-        redirect("modify.php?msg=SerialDoesntExist");
-    } else {
-        $sql = "update `serial_numbers` set `serial_number` = '$newSerial' where `serial_number` = '$oldSerial'";
-        $result = $dblink->query($sql) or die($dblink->error);
-        redirect("index.php?msg=SerialModified");
-    }
-}
-
-if (isset($_POST['submitNewManu'])) {
-    $oldManu = $_POST['oldManufacturer'];
-    $newManu = $_POST['newManufacturer'];
-    $status = $_POST['manustatus'];
-    $sql = "update `manufacturer` set `name` = '$newManu', `status` = '$status' where `id` = '$oldManu'";
-    $result = $dblink->query($sql) or die($dblink->error);
-    redirect("index.php?msg=ManufacturerModified");
-}
-
-if (isset($_POST['submitNewDevice'])){
-    $oldDevice = $_POST['oldDevice'];
-    $newDevice = $_POST['newDevice'];
-    $status = $_POST['devstatus'];
-    $sql = "update `device_type` set `name` = '$newDevice', `status` = '$status' where `id` = '$oldDevice'";
-    $result = $dblink->query($sql) or die($dblink->error);
-    redirect("index.php?msg=DeviceModified");
-}
-
-?>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // HANDLE SERIAL NUMBER INPUT
-        var oldSerialInput = document.getElementById('oldSerialInput');
-        var newSerialInput = document.getElementById('newSerialInput');
-        var serialInDiv = document.getElementById('serial-in-div');
-        var oldStatusSpan = document.getElementById('old-serial-status');
-        var newStatusSpan = document.getElementById('new-serial-status');
-        var serialBtn = document.getElementById('serial-btn');
-
-        oldSerialInput.addEventListener('input', function () {
-            var inputValue = oldSerialInput.value;
-            if (inputValue.startsWith("SN-")) {
-                oldStatusSpan.textContent = "";
-                serialInDiv.classList.remove('has-error');
-                serialBtn.disabled = false;
-            } else {
-                oldStatusSpan.textContent = "Serial number must start with 'SN-'.";
-                serialInDiv.classList.add('has-error');
-                serialBtn.disabled = true;
-            }
-        });
-        newSerialInput.addEventListener('input', function () {
-            var inputValue = newSerialInput.value;
-            if (inputValue.startsWith("SN-")) {
-                newStatusSpan.textContent = "";
-                serialInDiv.classList.remove('has-error');
-                serialBtn.disabled = false;
-            } else {
-                newStatusSpan.textContent = "Serial number must start with 'SN-'.";
-                serialInDiv.classList.add('has-error');
-                serialBtn.disabled = true;
-            }
-        });
-
-        // HANDLE MANUFACTURER INPUT
-        var newManufacturerInput = document.getElementById('newManufacturerInput');
-        var manuInDiv = document.getElementById('manu-in-div');
-        var newManuSpan = document.getElementById('new-manufacturer-status');
-        var manuBtn = document.getElementById('manu-btn');
-
-        newManufacturerInput.addEventListener('input', function () {
-            var inputValue = newManufacturerInput.value;
-            if (inputValue.length > 0) {
-                newManuSpan.textContent = "";
-                manuInDiv.classList.remove('has-error');
-                manuBtn.disabled = false;
-            } else {
-                newManuSpan.textContent = "Manufacturer cannot be blank.";
-                manuInDiv.classList.add('has-error');
-                manuBtn.disabled = true;
-            }
-        });
-
-        // HANDLE DEVICE INPUT
-        var newDeviceInput = document.getElementById('newDeviceInput');
-        var devInDiv = document.getElementById('dev-in-div');
-        var newDeviceSpan = document.getElementById('new-device-status');
-        var devBtn = document.getElementById('dev-btn');
-
-        newDeviceInput.addEventListener('input', function () {
-            var inputValue = newDeviceInput.value;
-            if (inputValue.length > 0) {
-                newDeviceSpan.textContent = "";
-                devInDiv.classList.remove('has-error');
-                devBtn.disabled = false;
-            } else {
-                newDeviceSpan.textContent = "Device cannot be blank.";
-                devInDiv.classList.add('has-error');
-                devBtn.disabled = true;
-            }
-        });
-    });
-</script>

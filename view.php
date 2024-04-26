@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Advanced Software Engineering</title>
+    <title>External Advanced Software Engineering</title>
     <link href="../assets/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/css/owl.carousel.css">
@@ -11,6 +11,7 @@
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="../assets/css/templatemo-style.css">
+    <script src="../assets/js/jquery-3.5.1.js"></script>
 </head>
 
 <body>
@@ -27,7 +28,7 @@
                     </button>
 
                     <!-- lOGO TEXT HERE -->
-                    <a href="#" class="navbar-brand">Search Equipment Database</a>
+                    <a href="#" class="navbar-brand">Search Equipment Database External</a>
                 </div>
                 <!-- MENU LINKS -->
                 <div class="collapse navbar-collapse">
@@ -54,41 +55,68 @@
                     <!-- THIS SHOULD SHOW A LIMIT OF 10K RECORDS -->
                     <!-- THIS SHOULD SHOW A LIMIT OF 10K RECORDS -->
                     <h3>View Database</h3>
-                    <?php
-                        require_once("functions.php");
-                        $dblink = db_connect("devices");
-                        $devices = array();
-                        $manufacturers = array();
-                        $sql = "select `name`, `id` from `device_type` where `status` = 'active'";
-                        $result = $dblink->query($sql) or die($dblink->error);
-                        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                            $devices[$row['id']] = $row['name'];
-                        }
-                        $sql = "select `name`, `id` from `manufacturer` where `status` = 'active'";
-                        $result = $dblink->query($sql) or die($dblink->error);
-                        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                            $manufacturers[$row['id']] = $row['name'];
-                        }
-                        $sql = "select `device_type_id`, `manufacturer_id`, `serial_number` from `serial_numbers` limit 1000";
-                        $search = $dblink->query($sql) or 
-                            die("<p>Something went wrong with $sql<br>".$dblink->error."</p>");
-                        if ($search->num_rows == 0) {
-                            echo "<h4>Something went wrong</h4>";
-                        } else {
-                            echo "<table class='table table-striped'>";
-                            echo "<tr><th>Device Type</th><th>Manufacturer</th><th>Serial Number</th></tr>";
-                            while($row = $search->fetch_array(MYSQLI_ASSOC)){
-                                echo "<tr>";
-                                echo "<td>".$devices[$row['device_type_id']]."</td>";
-                                echo "<td>".$manufacturers[$row['manufacturer_id']]."</td>";
-                                echo "<td>".$row['serial_number']."</td>";
-                                echo "</tr>";
-                            }
-                        } 
-                    ?>
+                    <div id="result"></div>
                 </div>
             </div>
         </section>
+        <script>
+            let device_types = {};
+            let manufacturers = {};
+            $(document).ready(function() {
+                // populate device dropdown
+                $.ajax({
+                    url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/device",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        result.MSG.forEach(function(item) {
+                            device_types[item.id] = item.name;
+                        });
+                    },
+                    error: function(error) {
+                        console.log('message Error' + JSON.stringify(error));
+                    }
+                });
+                // populate manufacturer dropdown
+                $.ajax({
+                    url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/manufacturer",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        result.MSG.forEach(function(item) {
+                            manufacturers[item.id] = item.name;
+                        });
+                    },
+                    error: function(error) {
+                        console.log('message Error' + JSON.stringify(error));
+                    }
+                });
+                $.ajax({
+                    url: "https://ec2-3-129-26-111.us-east-2.compute.amazonaws.com:8080/api/v1/equipment",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(res) {
+                        if (res.Status === 'SUCCESS') {
+                            if (res.MSG.length > 0) {
+                                var table = '<table class="table table-striped"><thead><tr><th>Device Type</th><th>Manufacturer</th><th>Serial Number</th><th>Status</th></tr></thead><tbody>';
+                                res.MSG.forEach(function(item) {
+                                    table += '<tr><td>' + device_types[item.device_type_id] + '</td><td>' + manufacturers[item.manufacturer_id] + '</td><td>' + item.serial_number + '</td><td>' + item.status + '</td></tr>';
+                                });
+                                table += '</tbody></table>';
+                                $("#result").html(table);
+                            } else {
+                                $("#result").html('No records found');
+                            }
+                        } else {
+                            $("#result").html(res.MSG);
+                        }
+                    },
+                    error: function(error) {
+                        console.log('message Error' + JSON.stringify(error));
+                    }
+                });
+            });
+        </script>
     </body>
 
 </html>
